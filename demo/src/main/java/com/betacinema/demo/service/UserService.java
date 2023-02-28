@@ -12,8 +12,8 @@ public class UserService implements IUser{
     private UserRepository repository;
 
     @Override
-    public User addUser(User user) {
-        return null;
+    public void addUser(User user) {
+        repository.save(user);
     }
 
     @Override
@@ -25,4 +25,13 @@ public class UserService implements IUser{
     public User getUserByID(int id) {
         return repository.getById(id);
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        User user = null;
+        user = repository.findByEmail(email);
+        return user;
+    }
+
+
 }

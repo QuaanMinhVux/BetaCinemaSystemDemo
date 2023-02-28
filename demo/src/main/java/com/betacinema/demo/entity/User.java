@@ -1,91 +1,91 @@
 package com.betacinema.demo.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.sql.Date;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "Member")
+@Entity(name = "Member")
+@Table(name = "Member", schema = "dbo")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "UserID")
-    private int UserID;
-    @Column(name = "UserName")
-    private String UserName;
-    @Column(name = "DOB")
-    private Date DOB;
-    @Column(name = "Balance")
-    private java.math.BigDecimal Balance;
-    @Column(name = "VIP")
-    private boolean VIP;
-    @Column(name = "Email")
-    private String Email;
-
+    private int userID;
+    @Column(name = "UserName", nullable = false)
+    private String userName;
+    @Column(name = "DOB", nullable = false)
+    private Date dob;
+    @Column(name = "Balance", nullable = false)
+    private java.math.BigDecimal balance;
+    @Column(name = "VIP", nullable = false)
+    private boolean vip;
+    @Column(name = "Email", nullable = false)
+    private String email;
+    @Column(name = "Password", nullable = false)
+    private String password;
     public User() {
     }
 
-    public User(int userID, String userName, Date DOB, BigDecimal balance, boolean VIP, String email) {
-        UserID = userID;
-        UserName = userName;
-        this.DOB = DOB;
-        Balance = balance;
-        this.VIP = VIP;
-        Email = email;
+
+    public User(int userID, String userName, Date dob, BigDecimal balance, boolean vip, String email, String password) {
+        this.userID = userID;
+        this.userName = userName;
+        this.dob = dob;
+        this.balance = balance;
+        this.vip = vip;
+        this.email = email;
+        this.password = password;
     }
 
-    public String getEmail() {
-        return Email;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEmail(String email) {
-        Email = email;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getUserID() {
-        return UserID;
+        return userID;
     }
-
     public String getUserName() {
-        return UserName;
+        return userName;
     }
 
     public void setUserName(String userName) {
-        UserName = userName;
+        this.userName = userName;
     }
 
-    public Date getDOB() {
-        return DOB;
+    public Date getDob() {
+        return dob;
     }
 
-    public void setDOB(Date DOB) {
-        this.DOB = DOB;
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 
     public BigDecimal getBalance() {
-        return Balance;
+        return balance;
     }
 
     public void setBalance(BigDecimal balance) {
-        Balance = balance;
+        this.balance = balance;
     }
 
-    public boolean isVIP() {
-        return VIP;
+    public boolean isVip() {
+        return vip;
     }
 
-    public void setVIP(boolean VIP) {
-        this.VIP = VIP;
+    public void setVip(boolean vip) {
+        this.vip = vip;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "UserID=" + UserID +
-                ", UserName='" + UserName + '\'' +
-                ", DOB=" + DOB +
-                ", Balance=" + Balance +
-                ", VIP=" + VIP +
-                '}';
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

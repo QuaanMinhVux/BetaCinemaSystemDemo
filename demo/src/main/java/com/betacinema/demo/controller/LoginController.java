@@ -1,7 +1,6 @@
 package com.betacinema.demo.controller;
-
-import com.betacinema.demo.entity.Account;
-import com.betacinema.demo.service.IAccount;
+import com.betacinema.demo.entity.User;
+import com.betacinema.demo.service.IUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,20 +10,29 @@ import java.util.List;
 @RestController
 public class LoginController {
     @Autowired
-    private IAccount account;
-    @GetMapping("/login")
-    public List<Account> getAll(){
-        return account.getAll();
+    private IUser iUser;
+    @GetMapping("/get")
+    public User getUser(@RequestBody User user){
+        User u = iUser.getUserByEmail(user.getEmail());
+        return u;
     }
     @PostMapping("/login")
-    public ResponseEntity<Account> login(@RequestBody Account acc){
-        boolean check = false;
-        check = account.checkAccount(acc);
-        if(!check){
+    public ResponseEntity<User> login(@RequestBody User user){
+        User u = iUser.getUserByEmail(user.getEmail());
+        boolean check = u.getPassword().equals(user.getPassword());
+        if(user == null){
             return ResponseEntity.notFound().build();
         }else{
-            Account account1 = account.get(acc.getEmail());
-            return ResponseEntity.ok(account1);
+            if(check){
+                return ResponseEntity.ok(u);
+            }else{
+                return ResponseEntity.notFound().build();
+            }
         }
+    }
+    @GetMapping("/check")
+    public boolean check(@RequestBody User user){
+        User u = iUser.getUserByEmail(user.getEmail());
+        return u.getPassword().equals(user.getPassword());
     }
 }
