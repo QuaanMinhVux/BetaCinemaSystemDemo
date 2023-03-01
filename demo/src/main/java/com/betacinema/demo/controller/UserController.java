@@ -12,6 +12,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     private IUser iUser;
+
     @GetMapping("/user")
     public List<User> getAll(){
         return iUser.getAllUser();
@@ -26,6 +27,12 @@ public class UserController {
             return ResponseEntity.ok(user);
         }
     }
+    @PostMapping("reset-password")
+    public User resetPassword(@RequestBody User user){
+        User u = iUser.resetPassword(user, user.getPassword());
+        return u;
+    }
+
 
 
 }

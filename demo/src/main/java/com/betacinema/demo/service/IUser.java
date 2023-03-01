@@ -8,4 +8,5 @@ public interface IUser {
     public List<User> getAllUser();
     public User getUserByID(int id);
     public User getUserByEmail(String email);
+    public User resetPassword(User user, String password);
 }
