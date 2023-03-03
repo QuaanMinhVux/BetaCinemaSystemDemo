@@ -14,8 +14,13 @@ public class UserService implements IUser{
     private UserRepository repository;
 
     @Override
-    public void addUser(User user) {
-        repository.save(user);
+    public void addUser(User user){
+        User u = repository.findByEmail(user.getEmail());
+        if(u == null){
+            repository.save(user);
+        }else{
+            throw new RuntimeException("Email exsist");
+        }
     }
 
     @Override
@@ -25,7 +30,13 @@ public class UserService implements IUser{
 
     @Override
     public User getUserByID(int id) {
-        return repository.getById(id);
+        User user =null;
+        user = repository.getById(id);
+        if(user != null) {
+            return user;
+        }else{
+            throw new RuntimeException("User not exsist");
+        }
     }
 
     @Override
@@ -36,12 +47,40 @@ public class UserService implements IUser{
     }
 
     @Override
-    public User resetPassword(User user, String password) {
-        User u = getUserByEmail(user.getEmail());
+    public User resetPassword(String id, String password) {
+        User u = repository.findById(Integer.parseInt(id)).get();
         repository.delete(u);
         u.setPassword(password);
         repository.save(u);
         return u;
+    }
+
+    @Override
+    public User delete(User user){
+        User u = repository.findByEmail(user.getEmail());
+        if(u != null){
+            repository.delete(u);
+            return u;
+        }else{
+            throw new RuntimeException("User doesn't exsist");
+        }
+    }
+
+    @Override
+    public User update(User user) {
+        User u = repository.findById(user.getUserID()).get();
+        User u2 = repository.findByEmail(user.getEmail());
+        if(u == null){
+            throw new RuntimeException("User doesn't exist");
+        }else if(u2 != null){
+
+            throw new RuntimeException("Email incorrect");
+        }
+        else{
+            repository.delete(u);
+            repository.save(user);
+        }
+        return user;
     }
 
 
