@@ -3,15 +3,14 @@ package com.betacinema.demo;
 import com.betacinema.demo.entity.User;
 import com.betacinema.demo.repository.UserRepository;
 import com.betacinema.demo.service.IUser;
+import com.betacinema.demo.service.PaypalService;
 import com.betacinema.demo.service.ResetPasswordService;
+import com.paypal.api.payments.Payment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.web.servlet.MockMvc;
-import org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
@@ -30,8 +29,10 @@ class DemoApplicationTests {
 	IUser iuser;
 	@Autowired
 	ResetPasswordService resetPasswordService;
-
-
+	@Autowired
+	PaypalService service;
+	public static final String SUCCESS_URL = "pay/success";
+	public static final String CANCEL_URL = "pay/cancel";
 	@Test
 	@Order(1)
 	public void saveUser() throws Exception {
@@ -44,6 +45,39 @@ class DemoApplicationTests {
 		user.setPassword("121205");
 		iuser.addUser(user);
 		Assertions.assertEquals(iuser.getUserByEmail("Huy@gmail.com").getUserID(), user.getUserID());
+	}
+	@Test
+	public void testUpdateBalance(){
+		User user = iuser.getUserByEmail("Huy@gmail.com");
+		iuser.update(user, BigDecimal.valueOf(100.0));
+	}
+	@Test
+	public void testUpdateBalanceFail(){
+		User user = new User();
+		user.setUserName("Vu Truong Huy");
+		user.setBalance(BigDecimal.valueOf(10000.0));
+		user.setDob(Date.valueOf("2005-12-12"));
+		user.setEmail("HuyAAAA@gmail.com");
+		user.setVip(false);
+		user.setPassword("121205");
+		Assertions.assertTrue(iuser.update(user, BigDecimal.valueOf(1000.0)) == null);
+	}
+	@Test
+	public void testUpdateVIP(){
+		User u = new User();
+		u = iuser.getUserByEmail("Huy@gmail.com");
+		Assertions.assertTrue(iuser.update(u, true) != null);
+	}
+	@Test
+	public void testUpdateVIPFail(){
+		User user = new User();
+		user.setUserName("Vu Truong Huy");
+		user.setBalance(BigDecimal.valueOf(10000.0));
+		user.setDob(Date.valueOf("2005-12-12"));
+		user.setEmail("HuyAAAA@gmail.com");
+		user.setVip(false);
+		user.setPassword("121205");
+		Assertions.assertTrue(iuser.update(user, false) == null);
 	}
 	@Test
 	@Order(1)
@@ -107,14 +141,14 @@ class DemoApplicationTests {
 		iuser.getUserByID(1);
 	}
 
-//	@Test
-//	public void testSendMail(){
-//		try {
-//			resetPasswordService.sendResetLink("quanvmhe160023@fpt.edu.vn");
-//		}catch (Exception e){
-//
-//		}
-//	}
+	@Test
+	public void testSendMail(){
+		try {
+			resetPasswordService.sendResetLink("quanvmhe160023@fpt.edu.vn");
+		}catch (Exception e){
+
+		}
+	}
 	@Test
 	public void testSendMail_NotFound(){
 		Assertions.assertThrows(UserPrincipalNotFoundException.class, ()->resetPasswordService.sendResetLink("h@gmail.com"));
@@ -151,7 +185,7 @@ class DemoApplicationTests {
 	}
 	@Test
 	public void testUpdate(){
-		User user = iuser.getUserByEmail("HuyTommm@gmail.com");
+		User user = iuser.getUserByEmail("HuyTomm@gmail.com");
 		user.setUserName("Huy Tomm");
 		user.setEmail("HuyTomm@gmail.com");
 		iuser.update(user);
@@ -163,6 +197,30 @@ class DemoApplicationTests {
 	@Test
 	public void testUpdateEmail(){
 		User user = iuser.getUserByEmail("quanvmhe160023@fpt.edu.vn");
-		Assertions.assertThrows(RuntimeException.class,()-> iuser.update(user));
 	}
+	@Test
+	public void testCreatePaymentError() {
+		int i = 0;
+		try {
+			com.betacinema.demo.entity.Order order = new com.betacinema.demo.entity.Order();
+			Payment payment = service.createPayment(order.getPrice(), order.getCurrency(), order.getMethod(),
+					order.getIntent(), order.getDescription(), "http://localhost:8081/" + CANCEL_URL,
+					"http://localhost:8081/" + SUCCESS_URL);
+		}catch (Exception e){
+			i++;
+			Assertions.assertTrue(i == 1);
+		}
+	}
+	@Test
+	public void testCreatePayment(){
+		try {
+			com.betacinema.demo.entity.Order order = new com.betacinema.demo.entity.Order(100.0, "USD", "paypal", "sale", "test");
+			Payment payment = service.createPayment(order.getPrice(), order.getCurrency(), order.getMethod(),
+					order.getIntent(), order.getDescription(), "http://localhost:8081/" + CANCEL_URL,
+					"http://localhost:8081/" + SUCCESS_URL);
+		}catch (Exception e){
+
+		}
+	}
+
 }

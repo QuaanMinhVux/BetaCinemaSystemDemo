@@ -1,6 +1,7 @@
 package com.betacinema.demo.controller;
 
 import com.betacinema.demo.entity.Order;
+import com.betacinema.demo.service.IUser;
 import com.betacinema.demo.service.PaypalService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
     public class PaymentController {
     public static final String SUCCESS_URL = "pay/success";
     public static final String CANCEL_URL = "pay/cancel";
-        private Logger log = LoggerFactory.getLogger(getClass());
-        @Autowired
-        private PaypalService service;
+    private Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private PaypalService service;
+    @Autowired
+    IUser iUser;
     @GetMapping("/")
     public String home() {
         return "home";

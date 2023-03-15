@@ -1,12 +1,12 @@
 package com.betacinema.demo.service;
 
-import com.betacinema.demo.repository.UserRepository;
 import com.betacinema.demo.entity.User;
+import com.betacinema.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService implements IUser{
@@ -48,7 +48,8 @@ public class UserService implements IUser{
 
     @Override
     public User resetPassword(String id, String password) {
-        User u = repository.findById(Integer.parseInt(id)).get();
+        User u = null;
+        u = repository.findById(Integer.parseInt(id)).get();
         repository.delete(u);
         u.setPassword(password);
         repository.save(u);
@@ -68,19 +69,43 @@ public class UserService implements IUser{
 
     @Override
     public User update(User user) {
-        User u = repository.findById(user.getUserID()).get();
-        User u2 = repository.findByEmail(user.getEmail());
+        User u = repository.findByEmail(user.getEmail());
         if(u == null){
             throw new RuntimeException("User doesn't exist");
-        }else if(u2 != null){
-
-            throw new RuntimeException("Email incorrect");
         }
         else{
             repository.delete(u);
-            repository.save(user);
+            u.setVip(user.isVip());
+            u.setBalance(user.getBalance());
+            repository.save(u);
         }
         return user;
+    }
+
+    @Override
+    public User update(User user, BigDecimal balance) {
+        User u = getUserByEmail(user.getEmail());
+        if(u == null){
+            return null;
+        }else{
+            u.setBalance(balance);
+            repository.delete(user);
+            repository.save(u);
+        }
+        return u;
+    }
+
+    @Override
+    public User update(User user, boolean VIP) {
+        User u = getUserByEmail(user.getEmail());
+        if(u == null){
+            return null;
+        }else{
+            u.setVip(VIP);
+            repository.delete(user);
+            repository.save(u);
+        }
+        return u;
     }
 
 

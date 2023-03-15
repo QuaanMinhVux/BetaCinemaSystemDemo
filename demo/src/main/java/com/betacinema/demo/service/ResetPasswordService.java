@@ -23,7 +23,7 @@ public class ResetPasswordService {
         if(user == null){
             throw new UserPrincipalNotFoundException("no such user" + email);
         }
-        String url = "http://localhost:8080/reset-password/=" + user.getUserID();
+        String url = "http://localhost:8081/reset-password/" + user.getUserID();
         String message = "Please click the link bellow to reset your password: " + url;
         MimeMessage mail = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mail);

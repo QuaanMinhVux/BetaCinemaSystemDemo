@@ -11,4 +11,6 @@ public interface IUser {
     public User resetPassword(String id, String password);
     public User delete(User user) throws Exception;
     public User update(User user);
+    public User update(User user, java.math.BigDecimal balance);
+    public User update(User user, boolean VIP);
 }
