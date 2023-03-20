@@ -59,11 +59,15 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<User> updateInformation(@RequestBody @NotNull User user){
         User u = iUser.getUserByEmail(user.getEmail());
-        if(u == null){
-            return ResponseEntity.notFound().build();
+        try {
+            if(u == null){
+                return ResponseEntity.notFound().build();
+            }
+            u = iUser.update(user);
+            return ResponseEntity.ok(u);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
         }
-        iUser.update(user);
-        return ResponseEntity.ok(user);
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteByID(@PathVariable("id") String id){

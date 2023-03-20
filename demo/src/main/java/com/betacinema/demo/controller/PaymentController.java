@@ -21,10 +21,7 @@ import org.springframework.web.bind.annotation.*;
     private PaypalService service;
     @Autowired
     IUser iUser;
-    @GetMapping("/")
-    public String home() {
-        return "home";
-    }
+
 
     @PostMapping("/pay")
     public String payment(@RequestBody Order order) {

@@ -77,9 +77,11 @@ public class UserService implements IUser{
             repository.delete(u);
             u.setVip(user.isVip());
             u.setBalance(user.getBalance());
+            u.setDob(user.getDob());
+            u.setUserName(user.getUserName());
             repository.save(u);
         }
-        return user;
+        return u;
     }
 
     @Override

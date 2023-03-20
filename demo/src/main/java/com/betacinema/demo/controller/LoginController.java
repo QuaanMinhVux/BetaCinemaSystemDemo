@@ -2,12 +2,10 @@ package com.betacinema.demo.controller;
 
 import com.betacinema.demo.entity.User;
 import com.betacinema.demo.service.IUser;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class LoginController {
@@ -19,18 +17,30 @@ public class LoginController {
         return u;
     }
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user){
+    public ModelAndView login(@ModelAttribute("user") User user, HttpSession session){
         User u = iUser.getUserByEmail(user.getEmail());
+        System.out.println(user.getEmail() + " " + user.getPassword());
+        System.out.println(u.getEmail() + " " + u.getPassword());
         if(u == null){
-            return ResponseEntity.notFound().build();
+            return new ModelAndView("Login.html");
         }else{
             boolean check = u.getPassword().equals(user.getPassword());
             if(check){
-                return ResponseEntity.ok(u);
+                session.setAttribute("login", u);
+                System.out.println("Success");
+                return new ModelAndView("redirect:/");
             }else{
-                return ResponseEntity.notFound().build();
+                System.out.println("False");
+                return new ModelAndView("Login.html");
             }
         }
+    }
+    @GetMapping("/login")
+    public ModelAndView login(){
+        ModelAndView mav = new ModelAndView("Login.html");
+        User user = new User();
+        mav.addObject("user", user);
+        return mav;
     }
     @GetMapping("/check")
     public boolean check(@RequestBody User user){

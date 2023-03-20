@@ -53,6 +53,12 @@ nav {
 .header-left ul li a {
     text-decoration: none;
     color: white;
+    font-weight: bold;
+}
+
+.header-left ul li a:hover {
+  text-decoration: none;
+  color: rgb(235, 71, 71);
 }
 
 .header-right {
@@ -179,24 +185,24 @@ nav {
 
 }
 
-.container .content .group-film {
+.group-film {
     display: flex;
     height: 300px;
 }
 
-.container .content .group-film .film-display {
+.group-film .film-display {
     position: relative;
     padding-top: 5px;
 
 }
 
-.container .content .group-film .film-display img {
+.group-film .film-display img {
     width: 100%;
     height: auto;
     box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.5);
 }
 
-.container .content .group-film .film-display h5 {
+.group-film .film-display h5 {
     position: absolute;
     bottom: 0;
     color: white;
@@ -208,7 +214,7 @@ nav {
 
 
 
-.container .content .group-film .film-display i {
+.group-film .film-display i {
     display: none;
     position: absolute;
     top: 50%;
@@ -217,7 +223,7 @@ nav {
     font-size: 100px;
 }
 
-.container .content .group-film .film-display:hover i {
+.group-film .film-display:hover i {
     margin-top: 5px;
     display: block;
     background-color: rgba(0, 0, 0, 0.2);
@@ -295,7 +301,7 @@ nav {
     border-bottom: 1px solid #e74c3c;
   }
 
-  .btn {
+  .btn-submit {
     color: #fff;
     background-color: #e74c3c;
     width: 100px;
@@ -306,7 +312,7 @@ nav {
     margin: 0 50px 0 100px;
   }
   
-  .btn:hover{
+  .btn-submit:hover{
     background-color: #e66456;
   }
   /*.btn:after{
@@ -415,6 +421,144 @@ $button-active-blue: #1669F2; */
     border-radius: 3px;
     padding: 70px 100px;
     box-shadow:5px 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.content-detail{
+  
+  padding: 5%;
+  display: flex;
+}
+
+.content-left{
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.img-details {
+  padding-bottom: 20px;
+  width: 70%;
+}
+
+.title-detail{
+  text-align: center;
+  color: white;
+}
+
+.content-right {
+  color: white;
+}
+
+.content-right button{
+  border: none;
+  border-radius: 2px;
+  padding: 3px;
+  margin: 5px;
+  background-color: #4f4d4d;
+  box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+.content-right button:hover{
+
+  background-color: #7d7777;
+  color: #58332f;
+}
+
+.bottom-content{
+  margin: 0;
+  background-color: #232222;
+  padding-bottom: 20px;
+}
+
+
+.line{
+  border: 1px solid black;
+  width: 100%; 
+}
+
+.comment-section{
+  height: 100%;
+  background-color: white;
+  margin: 20px;
+  padding: 50px;
+}
+
+.comment-box,.comment{
+  display: flex;
+  align-items: center;  
+
+}
+
+.comment-box img, .comment img{
+  display: inline-block;
+  width: 50px;
+  height: 100%;
+  margin-right: 10px;
+}
+
+.comment-box form{
+  width: 100%;
+  height: 50px;
+}
+
+.comment-box input{
+  width: 90%;
+  height: 100%;
+  padding-left: 10px;
+}
+
+.comment-box button{
+  background-color: #91adda;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 13px;
+}
+
+.comment .cmt-name{
+  padding-top: 15px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: large;
+}
+
+h2{
+  color: white;
+  padding-left: 20px;
+}
+
+.video-container{
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* This creates a 16:9 aspect ratio */
+  position: relative;
+}
+
+.main .movie-title{
+  color: white;
+  margin-bottom: -50px;
+  padding: 20px 50px ;
+}
+
+video{
+  margin-top: 10px;
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+video::-webkit-media-controls-progress-bar {
+  background-color: red;
+}
+
+.watch-film .save-btn{
+  
+  justify-content: right;
+  
 }
 
 .footer {
