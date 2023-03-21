@@ -1,15 +1,25 @@
 package com.betacinema.demo.controller;
 
 import com.betacinema.demo.entity.Order;
+import com.betacinema.demo.entity.User;
+import com.betacinema.demo.service.Authorize;
 import com.betacinema.demo.service.IUser;
 import com.betacinema.demo.service.PaypalService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.math.BigDecimal;
 
 
 @RestController
@@ -21,17 +31,38 @@ import org.springframework.web.bind.annotation.*;
     private PaypalService service;
     @Autowired
     IUser iUser;
+    Authorize authorize = new Authorize();
 
-
+    @GetMapping("/pay")
+    public ModelAndView payment(HttpSession session){
+        if(!authorize.checkLogin(session)){
+            return new ModelAndView("redirect:/login");
+        }
+        return new ModelAndView("Error");
+    }
     @PostMapping("/pay")
-    public String payment(@RequestBody Order order) {
+    public ModelAndView payment(HttpServletRequest request, HttpSession session) {
+        if(!authorize.checkLogin(session)){
+            return new ModelAndView("redirect:/login");
+        }
         try {
+            Order order = new Order();
+            double price = Double.parseDouble(request.getParameter("money"));
+            order.setPrice(price);
+            order.setCurrency("USD");
+            order.setDescription("");
+            order.setMethod("paypal");
+            order.setIntent("Sale");
             Payment payment = service.createPayment(order.getPrice(), order.getCurrency(), order.getMethod(),
                     order.getIntent(), order.getDescription(), "http://localhost:8081/" + CANCEL_URL,
                     "http://localhost:8081/" + SUCCESS_URL);
             for(Links link:payment.getLinks()) {
                 if(link.getRel().equals("approval_url")) {
-                    return "redirect:"+link.getHref();
+                    session.setAttribute("money", price);
+                    User u = (User) session.getAttribute("login");
+                    Double money = (Double)session.getAttribute("money") + u.getBalance().doubleValue();
+                    System.out.println(session.getAttribute("money"));
+                    return new ModelAndView("redirect:"+link.getHref());
                 }
             }
 
@@ -39,7 +70,7 @@ import org.springframework.web.bind.annotation.*;
 
             e.printStackTrace();
         }
-        return "redirect:/";
+        return new ModelAndView("redirect:/");
     }
 
     @GetMapping(value = CANCEL_URL)
@@ -48,17 +79,24 @@ import org.springframework.web.bind.annotation.*;
     }
 
     @GetMapping(value = SUCCESS_URL)
-    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+    public ModelAndView successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, HttpSession session) {
         try {
             Payment payment = service.executePayment(paymentId, payerId);
             System.out.println(payment.toJSON());
             if (payment.getState().equals("approved")) {
-                return "success";
+                User u = (User)session.getAttribute("login");
+                Double money = (Double)session.getAttribute("money") + u.getBalance().doubleValue();
+                BigDecimal balance = BigDecimal.valueOf(money);
+                iUser.update(u, balance);
+                u.setBalance(balance);
+                session.removeAttribute("login");
+                session.setAttribute("login", u);
+                return new ModelAndView("redirect:/user-profile");
             }
         } catch (PayPalRESTException e) {
             System.out.println(e.getMessage());
         }
-        return "redirect:/";
+        return new ModelAndView("redirect:/");
     }
 
 }

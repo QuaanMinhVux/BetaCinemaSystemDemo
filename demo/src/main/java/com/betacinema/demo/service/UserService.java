@@ -87,24 +87,24 @@ public class UserService implements IUser{
             return null;
         }else{
             u.setBalance(balance);
-            repository.delete(user);
             repository.save(u);
         }
         return u;
     }
 
     @Override
-    public User update(User user, boolean VIP) {
+    public User update(User user, boolean VIP, BigDecimal balance) {
         User u = getUserByEmail(user.getEmail());
         if(u == null){
             return null;
         }else{
             u.setVip(VIP);
-            repository.delete(user);
+            u.setBalance(balance);
             repository.save(u);
         }
         return u;
     }
+
 
 
 }

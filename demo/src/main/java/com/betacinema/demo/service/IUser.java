@@ -1,6 +1,8 @@
 package com.betacinema.demo.service;
 
 import com.betacinema.demo.entity.User;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IUser {
@@ -12,5 +14,5 @@ public interface IUser {
     public User delete(User user) throws Exception;
     public User update(User user);
     public User update(User user, java.math.BigDecimal balance);
-    public User update(User user, boolean VIP);
+    public User update(User user, boolean VIP, BigDecimal balance);
 }

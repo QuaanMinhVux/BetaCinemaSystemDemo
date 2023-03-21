@@ -53,4 +53,10 @@ public class LoginController {
         mav.addObject("user", user);
         return mav;
     }
+    @GetMapping("/set")
+    public ModelAndView set(){
+        System.out.println("Success");
+        ModelAndView mav = new ModelAndView("redirect:/");
+        return mav;
+    }
 }

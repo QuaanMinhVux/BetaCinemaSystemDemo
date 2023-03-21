@@ -1,6 +1,7 @@
 package com.betacinema.demo.controller;
 
 import com.betacinema.demo.entity.User;
+import com.betacinema.demo.service.Authorize;
 import com.betacinema.demo.service.IUser;
 import com.betacinema.demo.service.ResetPasswordService;
 import jakarta.mail.MessagingException;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,6 +24,10 @@ public class UserController {
     private IUser iUser;
     @Autowired
     private ResetPasswordService resetPasswordService;
+
+    private Authorize authorize = new Authorize();
+
+
     @GetMapping("/users")
     public List<User> getAll(){
         return iUser.getAllUser();
@@ -45,8 +51,17 @@ public class UserController {
             return new ModelAndView("Login.html");
         }
     }
+    @GetMapping("/test")
+    public String test(Model model){
+
+        model.addAttribute("msg","hi");
+        return "test";
+    }
     @GetMapping("/user-update")
     public ModelAndView userUpdate(HttpSession session){
+        if(!authorize.checkLogin(session)){
+            return new ModelAndView("redirect:/login");
+        }
         ModelAndView mav = new ModelAndView("Setting.html");
         User u = new User();
         mav.addObject("user", u);
@@ -55,36 +70,80 @@ public class UserController {
     }
     @PostMapping("/user-update")
     public ModelAndView userUpdate(HttpSession session, @ModelAttribute("user") User user, HttpServletRequest request) {
+        authorize.checkLogin(session);
         User u = (User)session.getAttribute("login");
         String newPwd = request.getParameter("newPwd");
         ModelAndView mav = new ModelAndView("Setting.html");
-        if(u.getPassword().equals(user.getPassword()) && user.getPassword().matches("[a-zA-Z0-9]+")){
-            u.setUserName(user.getUserName());
-            u.setPassword(newPwd);
-            iUser.update(u);
-            u = iUser.getUserByEmail(u.getEmail());
-            session.removeAttribute("login");
-            session.setAttribute("login", u);
-            mav.addObject("flag", "Change success");
-        }else if (user.getPassword().trim().isBlank() || user.getPassword() == null){
-            u.setUserName(user.getUserName());
-            iUser.update(u);
-            u = iUser.getUserByEmail(u.getEmail());
-            session.removeAttribute("login");
-            session.setAttribute("login", u);
-            mav.addObject("flag", "Change success");
+        System.out.println(user.getUserName());
+        if(user.getUserName().trim().isBlank() || user.getUserName() == null){
+            System.out.println("name null");
+            if(u.getPassword().equals(user.getPassword()) && user.getPassword().matches("[a-zA-Z0-9]+")){
+                u.setPassword(newPwd);
+                iUser.update(u);
+                u = iUser.getUserByEmail(u.getEmail());
+                session.removeAttribute("login");
+                session.setAttribute("login", u);
+                mav.addObject("flag", "Change success");
+            }else{
+                mav.addObject("flag", "Something gone wrong, try again");
+            }
         }else{
-            mav.addObject("flag", "Something gone wrong, try again");
+            System.out.println("name not null");
+            if(u.getPassword().equals(user.getPassword()) && user.getPassword().matches("[a-zA-Z0-9]+")){
+                u.setUserName(user.getUserName());
+                u.setPassword(newPwd);
+                iUser.update(u);
+                u = iUser.getUserByEmail(u.getEmail());
+                session.removeAttribute("login");
+                session.setAttribute("login", u);
+                mav.addObject("flag", "Change success");
+            }else if (user.getPassword().trim().isBlank() || user.getPassword() == null){
+                u.setUserName(user.getUserName());
+                iUser.update(u);
+                u = iUser.getUserByEmail(u.getEmail());
+                session.removeAttribute("login");
+                session.setAttribute("login", u);
+                mav.addObject("flag", "Change success");
+            }else{
+                mav.addObject("flag", "Something gone wrong, try again");
+            }
         }
         return mav;
     }
     @GetMapping("/user-premium")
     public ModelAndView userPremium(HttpSession session){
+        if(!authorize.checkLogin(session)){
+            return new ModelAndView("redirect:/login");
+        }
         ModelAndView mav = new ModelAndView("Premium.html");
+        mav.addObject("user", session.getAttribute("login"));
         return mav;
+    }
+    @PostMapping("/user-premium")
+    public ModelAndView userPremium(HttpSession session, HttpServletRequest request){
+        if(!authorize.checkLogin(session)){
+            return new ModelAndView("redirect:/login");
+        }
+        double money = Double.parseDouble(request.getParameter("m1"));
+        User u = (User)session.getAttribute("login");
+        if(money > u.getBalance().doubleValue()){
+            ModelAndView mav = new ModelAndView("/user-premium");
+            mav.addObject("flag", "Don't have enough money");
+            return mav;
+        }else{
+            Double balance = u.getBalance().doubleValue() - money;
+            BigDecimal m = BigDecimal.valueOf(balance);
+            u = iUser.update(u, true, m);
+            session.removeAttribute("login");
+            session.setAttribute("login", u);
+            return new ModelAndView("redirect:/user-profile");
+        }
     }
     @GetMapping("/user-profile")
     public ModelAndView userProfile(HttpSession session){
+        if(!authorize.checkLogin(session)){
+            return new ModelAndView("redirect:/login");
+        }
         User u = (User)session.getAttribute("login");
         ModelAndView mav = new ModelAndView("Profile.html");
         mav.addObject("user", u);
@@ -98,13 +157,19 @@ public class UserController {
         return mav;
     }
     @GetMapping("/change-password")
-    public ModelAndView changePwd(){
+    public ModelAndView changePwd(HttpSession session){
+        if(!authorize.checkLogin(session)){
+            return new ModelAndView("redirect:/login");
+        }
         ModelAndView mav = new ModelAndView("ChangePwd.html");
         mav.addObject("flag", null);
         return mav;
     }
     @PostMapping("/change-password")
     public ModelAndView changePwd(HttpServletRequest request, HttpSession session){
+        if(!authorize.checkLogin(session)){
+            return new ModelAndView("redirect:/login");
+        }
         String newPwd = request.getParameter("newPwd");
         String renewPwd = request.getParameter("renewPwd");
         if(newPwd.equals(renewPwd) && (!newPwd.trim().isBlank() && newPwd != null)){

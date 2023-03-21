@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,7 @@
     <div class="header">
         <nav>
             <nav class="header-left col-md-7">
-                <a href="index.html"><img src="img/logo.png" alt="this is a picture"></a>
+                <a href="/"><img src="img/logo.png" alt="this is a picture"></a>
                 <ul>
                     <li><a href="#">Home</a></li>
                     <li><a href="#">Tv Show</a></li>
@@ -33,15 +33,16 @@
                     </button>
                 </div>
                 <div class="ddl-profile-menu">
-                    
 
-                    <a class="ddl-profile" href="profile.html"><img src="img/profile-logo.png" alt="this is a picture"> User Name</a>
-                    <div class="ddl-profile-content">
-                        <a href="/user-profile">Profile Details</a>
-                        <a href="/user-update">Account Setting</a>
-                        <a href="/logout">Log Out</a>
-                    </div>
-                     <a href="/login">Login</a>
+
+                    <div th:if="${session.login}"><a class="ddl-profile"><img src="img/profile-logo.png" alt="this is a picture"> User Name</a>
+                        <div class="ddl-profile-content">
+                            <a href="/user-profile">Profile Details</a>
+                            <a href="/user-update">Account Setting</a>
+                            <a href="/logout">Log Out</a>
+                        </div></div>
+
+                    <div th:unless="${session.login}"><a href="/login">Login</a></div>
                 </div>
                 
             </nav>
