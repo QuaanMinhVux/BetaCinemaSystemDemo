@@ -74,9 +74,7 @@ public class UserService implements IUser{
             throw new RuntimeException("User doesn't exist");
         }
         else{
-            repository.delete(u);
-            u.setVip(user.isVip());
-            u.setBalance(user.getBalance());
+            u.setPassword(user.getPassword());
             u.setUserName(user.getUserName());
             repository.save(u);
         }

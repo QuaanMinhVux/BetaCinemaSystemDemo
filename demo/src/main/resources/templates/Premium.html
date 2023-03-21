@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -37,8 +37,19 @@
         
         color: white;
       }
-
-    
+      .pro-content-right{
+        background-image: url("img/premium.jpg");
+        height: 550px;
+        justify-content: center;
+        align-items: center;
+        color: white;
+      }
+      
+      .pro-content-left{
+        margin-right: 0;
+        border-top-right-radius: 0% ;
+        border-bottom-right-radius: 0% ;
+      }
     </style>
 </head>
 
@@ -67,9 +78,9 @@
 
                     <a class="ddl-profile" href="profile.html"><img src="img/profile-logo.png" alt="this is a picture"> User Name</a>
                     <div class="ddl-profile-content">
-                        <a href="/user-profile">Profile Details</a>
-                        <a href="/user-update">Account Setting</a>
-                        <a href="/logout">Log Out</a>
+                        <a href="#">Profile Details</a>
+                        <a href="#">Account Setting</a>
+                        <a href="#">Log Out</a>
                     </div>
                 </div>
             </nav>
@@ -79,25 +90,21 @@
         <div class="pro-content">
             <div class="pro-content-left">
                 <ul>
-                    <li style="border-top-left-radius: 15px; border-top-right-radius: 15px;" class="content-left-selected">User Information</li> 
-                    <a href="/user-update"><li>Account Setting</li></a>
-                    <a href="#"><li>Premium</li></a>
+                    <a href="profile.html"><li>User Information</li> </a>
+                    <a href="setting.html"><li>Account Setting</li></a>
+                    <li  class="content-left-selected">Premium</li>
+                
                 </ul>
             </div>
-            <div class="pro-content-right">
-                <div class="detail-left col-md-8">
-                    <ul>
-                        <li>User Name : <p th:text="${user.userName}"></p> </li>
-                        <li>Email : <p th:text="${user.email}"></p></li>
-                        <li>Balance : <p th:text="${user.balance}"></p></li>
-                        <li>Vip Status : <p th:text="${user.vip}"></p></li>
-                    </ul>
-                    <!-- <a style="margin-left: 25px;" href="#"><button class="btn-change">Change profile</button></a> -->
+            <div class="pro-content-right" >
+                <div class="purchase-box">
+                    <div class="text-section">
+                        <p>You want to see many new movies comming out, want to see the moives that are hot right now?</p>
+                    </div>
                     
-                </div>
-                <div class="img-right col-md-4">
-                    <img src="img/profile-logo.png" alt="">
-                    <a  href="/logout"><button class="btn-logout">Log Out</button></a>
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <a href="#"><button>Register VIP now</button></a>
+                    <i class="fa-solid fa-arrow-left"></i>
                 </div>
             </div>
         </div>

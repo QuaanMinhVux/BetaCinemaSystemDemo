@@ -77,27 +77,35 @@
     </div>
     <div class="pro-box">
         <div class="pro-content">
-            <div class="pro-content-left">
+            <div  class="pro-content-left">
                 <ul>
-                    <li style="border-top-left-radius: 15px; border-top-right-radius: 15px;" class="content-left-selected">User Information</li> 
-                    <a href="/user-update"><li>Account Setting</li></a>
-                    <a href="#"><li>Premium</li></a>
+                    <a href="/user-profile"><li >User Information</li></a>
+                    <li class="content-left-selected">Account Setting</li>
+                    <a href="premium.html"><li>Premium</li></a>
+                    
                 </ul>
             </div>
             <div class="pro-content-right">
                 <div class="detail-left col-md-8">
-                    <ul>
-                        <li>User Name : <p th:text="${user.userName}"></p> </li>
-                        <li>Email : <p th:text="${user.email}"></p></li>
-                        <li>Balance : <p th:text="${user.balance}"></p></li>
-                        <li>Vip Status : <p th:text="${user.vip}"></p></li>
-                    </ul>
+                    <form action="/user-update" method="post" th:object="${user}">
+                        <ul>
+                            <li>User Name </li>
+                            <input type="text" th:field="*{userName}">
+                            <li>Old Password </li>
+                            <input type="text" th:field="*{password}">
+                            <li>New Password </li>
+                            <input type="text" id="newPwd" name="newPwd" >
+                        </ul>
+                        <p th:text="${flag} ?: ''"></p>
+                        <button type="submit">Save Change</button>
+                    </form>
+                    <a style="margin-left: 25px;" href="change-pass.html"><button class="btn-changePass">Change Password</button></a>
                     <!-- <a style="margin-left: 25px;" href="#"><button class="btn-change">Change profile</button></a> -->
                     
                 </div>
                 <div class="img-right col-md-4">
                     <img src="img/profile-logo.png" alt="">
-                    <a  href="/logout"><button class="btn-logout">Log Out</button></a>
+                    <!-- <a  href="#"><button class="btn-logout">Log Out</button></a> -->
                 </div>
             </div>
         </div>

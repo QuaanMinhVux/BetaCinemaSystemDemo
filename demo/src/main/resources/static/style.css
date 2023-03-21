@@ -298,7 +298,7 @@ nav {
     color: #fff;
     /* pointer-event: none; */
     transition: all 0.5s ease-in-out;
-    padding-bottom: 50px;
+    /* padding-bottom: 50px; */
   }
 
   .input-container input {
@@ -329,7 +329,7 @@ nav {
     cursor: pointer;
     margin: 0 50px 0 100px;
   }
-  
+
   .btn-submit:hover{
     background-color: #e66456;
     transition: background-color 0.2s ease;
@@ -369,7 +369,7 @@ $button-active-blue: #1669F2; */
   margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
-  
+
 }
 
 .fb-btn {
@@ -381,7 +381,7 @@ $button-active-blue: #1669F2; */
     margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
-    
+
   }
 
 .fb-btn a{
@@ -444,13 +444,13 @@ $button-active-blue: #1669F2; */
 .pro-content{
   border-radius: 15px;
     height: 100%;
-    width: 60%;
+    width: 1000px;
     /* border: 1px solid white; */
     display: flex;
     background-color: #4f4d4d;
     /* border-top: 5px solid #4a4646 ; */
     box-shadow: 0 0 20px rgba(0, 0, 0, 10);
-    
+
   }
 
 .pro-content-left  {
@@ -476,6 +476,7 @@ $button-active-blue: #1669F2; */
   cursor: pointer;
   color: black;
   transition: background-color 0.2s ease;
+  border-radius: 15px;
 }
 
 .pro-content-left ul a{
@@ -487,11 +488,13 @@ $button-active-blue: #1669F2; */
   padding: 10px;
   display: flex;
   padding-top: 20px;
+  width: 1000px;
 }
 
 .pro-content-right img{
   width: 60%;
   height: auto;
+  border-radius: 10px;
 }
 
 .pro-content-right ul {
@@ -506,17 +509,17 @@ $button-active-blue: #1669F2; */
 }
 
 
-.pro-content-right .btn-change{
-  margin-top: 50%;
+.pro-content-right .btn-addMoney{
+  margin-top: 35%;
   /*  */
   border-radius: 5px;
   border: none;
   background-color: #91adda;
   height: 40px;
-  width: 150px;
+  width: 250px;
 }
 
-.pro-content-right .btn-change:hover{
+.pro-content-right .btn-addMoney:hover{
   cursor: pointer;
   background-color: #4f71a7;
   color: white;
@@ -531,7 +534,7 @@ $button-active-blue: #1669F2; */
   height: 40px;
   width: 150px;
   /* margin-left: 50%; */
-  margin-top: 154%;
+  margin-top: 120%;
   margin-left: 10%;
 }
 
@@ -540,11 +543,14 @@ $button-active-blue: #1669F2; */
    pointer-events: none;
    cursor: not-allowed;
    color: white;
+   border-radius: 15px;
    /* border-right: 1px solid black; */
 }
 
+
+
 .content-detail{
-  
+
   padding: 5%;
   display: flex;
 }
@@ -583,11 +589,76 @@ $button-active-blue: #1669F2; */
 }
 
 .content-right button:hover{
-  
+
   background-color: #7d7777;
   color: #58332f;
   transition: background-color 0.2s ease;
 
+}
+
+
+
+.pro-content-right form input{
+  margin-top: -100%;
+  width: 60%;
+  height: 30px;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+}
+
+.pro-content-right form button{
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 20px;
+  margin-left: 7%;
+
+}
+
+.pro-content-right .btn-changePass{
+  margin-top: 50%;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  margin-left: px;
+}
+
+.pro-content-right form button:hover,.pro-content-right .btn-changePass:hover{
+  background-color: #7d7777;
+  transition: background-color 0.2s ease;
+}
+
+
+
+.purchase-box{
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 200px/100px;
+  width: 400px;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.purchase-box .text-section{
+  position: relative;
+  width: 300px;
+  height: 80px;
+  left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    margin-top: -23px;
+}
+
+.purchase-box button{
+  border: none;
+  border-radius: 5px;
+  width: 150px;
+  height: 30px;
+  margin: 5px;
+  margin-top: 60px;
 }
 
 .bottom-content{

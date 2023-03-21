@@ -5,6 +5,7 @@ import com.betacinema.demo.entity.User;
 import com.betacinema.demo.service.IUser;
 import com.betacinema.demo.service.ResetPasswordService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,39 @@ public class UserController {
             }
             return new ModelAndView("Login.html");
         }
+    }
+    @GetMapping("/user-update")
+    public ModelAndView userUpdate(HttpSession session){
+        ModelAndView mav = new ModelAndView("Setting.html");
+        User u = new User();
+        mav.addObject("user", u);
+        mav.addObject("flag", null);
+        return mav;
+    }
+    @PostMapping("/user-update")
+    public ModelAndView userUpdate(HttpSession session, @ModelAttribute("user") User user, HttpServletRequest request) {
+        User u = (User)session.getAttribute("login");
+        String newPwd = request.getParameter("newPwd");
+        ModelAndView mav = new ModelAndView("Setting.html");
+        if(u.getPassword().equals(user.getPassword()) && user.getPassword().matches("[a-zA-Z0-9]+")){
+            u.setUserName(user.getUserName());
+            u.setPassword(newPwd);
+            iUser.update(u);
+            u = iUser.getUserByEmail(u.getEmail());
+            session.removeAttribute("login");
+            session.setAttribute("login", u);
+            mav.addObject("flag", "Change success");
+        }else if (user.getPassword().trim().isBlank() || user.getPassword() == null){
+            u.setUserName(user.getUserName());
+            iUser.update(u);
+            u = iUser.getUserByEmail(u.getEmail());
+            session.removeAttribute("login");
+            session.setAttribute("login", u);
+            mav.addObject("flag", "Change success");
+        }else{
+            mav.addObject("flag", "Something gone wrong, try again");
+        }
+        return mav;
     }
     @GetMapping("/user-profile")
     public ModelAndView userProfile(HttpSession session){
