@@ -28,7 +28,11 @@ public class LoginController {
             if(check){
                 session.setAttribute("login", u);
                 System.out.println("Success");
-                return new ModelAndView("redirect:/");
+                if(session.getAttribute("flag") == null){
+                    return new ModelAndView("redirect:/");
+                }else{
+                    return new ModelAndView("redirect:/change-password");
+                }
             }else{
                 System.out.println("False");
                 return new ModelAndView("Login.html");

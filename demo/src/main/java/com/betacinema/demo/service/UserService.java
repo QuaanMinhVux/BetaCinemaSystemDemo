@@ -50,7 +50,6 @@ public class UserService implements IUser{
     public User resetPassword(String id, String password) {
         User u = null;
         u = repository.findById(Integer.parseInt(id)).get();
-        repository.delete(u);
         u.setPassword(password);
         repository.save(u);
         return u;

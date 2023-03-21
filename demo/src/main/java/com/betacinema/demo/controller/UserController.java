@@ -1,6 +1,5 @@
 package com.betacinema.demo.controller;
 
-import com.betacinema.demo.entity.PasswordEntity;
 import com.betacinema.demo.entity.User;
 import com.betacinema.demo.service.IUser;
 import com.betacinema.demo.service.ResetPasswordService;
@@ -79,6 +78,11 @@ public class UserController {
         }
         return mav;
     }
+    @GetMapping("/user-premium")
+    public ModelAndView userPremium(HttpSession session){
+        ModelAndView mav = new ModelAndView("Premium.html");
+        return mav;
+    }
     @GetMapping("/user-profile")
     public ModelAndView userProfile(HttpSession session){
         User u = (User)session.getAttribute("login");
@@ -93,25 +97,45 @@ public class UserController {
         mav.addObject("user", user);
         return mav;
     }
-    @PostMapping("/reset-password")
-    public ResponseEntity<Void> sendResetLink(@RequestParam String email) throws UserPrincipalNotFoundException, MessagingException {
-        if(iUser.getUserByEmail(email) == null){
-            return ResponseEntity.notFound().build();
-        }
-        resetPasswordService.sendResetLink(email);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/change-password")
+    public ModelAndView changePwd(){
+        ModelAndView mav = new ModelAndView("ChangePwd.html");
+        mav.addObject("flag", null);
+        return mav;
     }
-    @PutMapping("/reset-password/{id}")
-    public ResponseEntity<Void> resetPassword(@PathVariable("id") String id, @RequestBody PasswordEntity password){
-        try {
-            if(iUser.getUserByID(Integer.parseInt(id)) == null){
-                return ResponseEntity.notFound().build();
-            }
-            iUser.resetPassword(id,password.getPassword());
-            return ResponseEntity.noContent().build();
-        }catch (Exception e){
-            return ResponseEntity.notFound().build();
+    @PostMapping("/change-password")
+    public ModelAndView changePwd(HttpServletRequest request, HttpSession session){
+        String newPwd = request.getParameter("newPwd");
+        String renewPwd = request.getParameter("renewPwd");
+        if(newPwd.equals(renewPwd) && (!newPwd.trim().isBlank() && newPwd != null)){
+            User u = (User)session.getAttribute("login");
+            u.setPassword(newPwd);
+            iUser.update(u);
+            return new ModelAndView("redirect:/");
         }
+        ModelAndView mav = new ModelAndView("ChangePwd.html");
+        mav.addObject("flag", "Something gone wrong, try again");
+        return mav;
+    }
+    @GetMapping("/reset-password")
+    public ModelAndView resetPwd(){
+        ModelAndView mav = new ModelAndView("ForgotPwd.html");
+        mav.addObject("user", new User());
+        mav.addObject("flag", null);
+        return mav;
+    }
+    @PostMapping("/reset-password")
+    public ModelAndView sendResetLink(@ModelAttribute("user") User user, HttpSession session) throws UserPrincipalNotFoundException, MessagingException {
+        ModelAndView mav = new ModelAndView();
+        if(iUser.getUserByEmail(user.getEmail()) == null){
+            mav.addObject("flag", "Email not found");
+            mav.setViewName("ForgotPwd.html");
+            return mav;
+        }
+        resetPasswordService.sendResetLink(user.getEmail(), iUser.getUserByEmail(user.getEmail()));
+        mav.setViewName("Login.html");
+        session.setAttribute("flag", true);
+        return mav;
     }
     @PutMapping("/update")
     public ResponseEntity<User> updateInformation(@RequestBody @NotNull User user){
