@@ -5,11 +5,14 @@ import com.betacinema.demo.entity.User;
 import com.betacinema.demo.service.IUser;
 import com.betacinema.demo.service.ResetPasswordService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpSession;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
@@ -24,17 +27,37 @@ public class UserController {
         return iUser.getAllUser();
     }
     @PostMapping("/register")
-    public ResponseEntity<User> createNew(@RequestBody User user) {
+    public ModelAndView createNew(@ModelAttribute("user") User user) {
         User u = iUser.getUserByEmail(user.getEmail());
+        System.out.println(u);
         if(u != null){
-            return ResponseEntity.badRequest().build();
+            System.out.println("Fail");
+            return new ModelAndView("SignUp.html");
         }else{
             try {
+                user.setBalance(BigDecimal.valueOf(0));
+                user.setVip(false);
+                System.out.println("Success");
                 iUser.addUser(user);
             }catch(Exception exception){
+                exception.printStackTrace();
             }
-            return ResponseEntity.ok(user);
+            return new ModelAndView("Login.html");
         }
+    }
+    @GetMapping("/user-profile")
+    public ModelAndView userProfile(HttpSession session){
+        User u = (User)session.getAttribute("login");
+        ModelAndView mav = new ModelAndView("Profile.html");
+        mav.addObject("user", u);
+        return mav;
+    }
+    @GetMapping("/register")
+    public ModelAndView registerGet(){
+        ModelAndView mav = new ModelAndView("SignUp");
+        User user = new User();
+        mav.addObject("user", user);
+        return mav;
     }
     @PostMapping("/reset-password")
     public ResponseEntity<Void> sendResetLink(@RequestParam String email) throws UserPrincipalNotFoundException, MessagingException {
@@ -83,7 +106,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
 
     }
-    @GetMapping("user/{email}")
+    @GetMapping("user/")
     public ResponseEntity<User> getUserByEmail(@PathVariable("email") String email){
         User u = iUser.getUserByEmail(email);
         if(u == null){

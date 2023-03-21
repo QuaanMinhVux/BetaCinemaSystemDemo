@@ -1,8 +1,7 @@
 package com.betacinema.demo.entity;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
-import java.sql.Date;
+
 import java.math.BigDecimal;
 
 @Entity(name = "Member")
@@ -14,8 +13,6 @@ public class User {
     private int userID;
     @Column(name = "UserName", nullable = false)
     private String userName;
-    @Column(name = "DOB", nullable = false)
-    private Date dob;
     @Column(name = "Balance", nullable = false)
     private java.math.BigDecimal balance;
     @Column(name = "VIP", nullable = false)
@@ -28,10 +25,9 @@ public class User {
     }
 
 
-    public User(int userID, String userName, Date dob, BigDecimal balance, boolean vip, String email, String password) {
+    public User(int userID, String userName, BigDecimal balance, boolean vip, String email, String password) {
         this.userID = userID;
         this.userName = userName;
-        this.dob = dob;
         this.balance = balance;
         this.vip = vip;
         this.email = email;
@@ -55,14 +51,6 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
     }
 
     public BigDecimal getBalance() {

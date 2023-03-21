@@ -35,16 +35,18 @@ public class LoginController {
             }
         }
     }
+    @GetMapping("/logout")
+    public ModelAndView logout(HttpSession session){
+        session.removeAttribute("login");
+        System.out.println(session.getAttribute("login"));
+        return new ModelAndView("redirect:/");
+    }
     @GetMapping("/login")
     public ModelAndView login(){
+        System.out.println("Success");
         ModelAndView mav = new ModelAndView("Login.html");
         User user = new User();
         mav.addObject("user", user);
         return mav;
-    }
-    @GetMapping("/check")
-    public boolean check(@RequestBody User user){
-        User u = iUser.getUserByEmail(user.getEmail());
-        return u.getPassword().equals(user.getPassword());
     }
 }
