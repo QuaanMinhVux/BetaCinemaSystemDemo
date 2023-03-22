@@ -1,4 +1,16 @@
-* {
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phim Lậu</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  <style>
+    * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -143,7 +155,7 @@ nav {
     min-width: 100px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    
+
 }
 
 .header-right .ddl-profile-content a {
@@ -163,7 +175,7 @@ nav {
     background-color: rgb(85, 82, 82);
     ;
     border-radius: 40px 15px 0 0;
-    
+
 }
 
 .header-right .ddl-profile-menu .ddl-profile-content a:hover {
@@ -177,7 +189,7 @@ nav {
     width: 100%;
     height: 100%;
     padding-bottom: 20px;
-    
+
 }
 
 .container .main {
@@ -281,7 +293,7 @@ nav {
     border-radius: 3px;
     padding: 70px 100px;
     box-shadow:5px 5px 5px 10px rgba(0, 0, 0, 0.5);
-    
+
   }
 
   .input-container {
@@ -816,3 +828,155 @@ video::-webkit-media-controls-progress-bar {
 
 
 }
+  </style>
+</head>
+
+<body>
+<div class="header">
+
+  <nav>
+    <nav class="header-left col-md-7">
+      <a href="index.html"><img src="img/logo.png" alt="this is a picture"></a>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Tv Show</a></li>
+        <li><a href="#">Movie</a></li>
+        <li><a href="#">Category</a></li>
+        <li><a href="#">Saved List</a></li>
+      </ul>
+    </nav>
+    <nav class="header-right col-md-5">
+      <div class="search-bar">
+        <input class="search-input" type="text" placeholder="Type to search a movie">
+        <button class="search-btn" >
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+      <div class="ddl-profile-menu">
+
+
+        <a class="ddl-profile" href="profile.html"><img src="img/profile-logo.png" alt="this is a picture"> User Name</a>
+        <div class="ddl-profile-content">
+          <a href="#">Profile Details</a>
+          <a href="#">Account Setting</a>
+          <a href="#">Log Out</a>
+        </div>
+        <!-- <a href="Login.html">Login</a> -->
+      </div>
+
+    </nav>
+  </nav>
+</div>
+<div class="container">
+  <div class="main watch-film">
+    <h1 class="movie-title">Movie Name</h1>
+    <div class="content-detail">
+      <div class="video-container" >
+        <iframe th:src="${film.mov_url}" style="height:700px;width:1166px">
+
+        </iframe>
+      </div>
+    </div>
+    <a href="#"><button class=" save-btn">Save to List</button></a>
+    Part : <a></a>
+    <div class="bottom-content">
+      <div class="line"></div>
+      <div class="comment-section">
+        <div class="comment-box" style="padding-bottom: 20px;">
+          <img src="img/profile-logo.png" alt="">
+          <form action="">
+            <input type="text" name="txtCmt">
+            <button type="submit"> Comment</button>
+          </form>
+        </div>
+        <div class="comment">
+          <img src="img/profile-logo.png" alt="">
+          <div class="detai">
+            <p class="cmt-name">User Name</p>
+            <p class="cmt-text">this is a comment</p>
+          </div>
+        </div>
+
+        <div class="comment">
+          <img src="img/profile-logo.png" alt="">
+          <div class="detai">
+            <p class="cmt-name">User Name</p>
+            <p class="cmt-text">this is a commenttttttttttttttttttttttttttttttttttt</p>
+          </div>
+        </div>
+
+        <div class="comment">
+          <img src="img/profile-logo.png" alt="">
+          <div class="detai">
+            <p class="cmt-name">User Name</p>
+            <p class="cmt-text">this is a commenttttttttttttttttttttttttttttttttttt</p>
+          </div>
+        </div>
+
+        <div class="comment">
+          <img src="img/profile-logo.png" alt="">
+          <div class="detai">
+            <p class="cmt-name">User Name</p>
+            <p class="cmt-text">this is a commenttttttttttttttttttttttttttttttttt</p>
+          </div>
+        </div>
+
+        <div class="comment">
+          <img src="img/profile-logo.png" alt="">
+          <div class="detai">
+            <p class="cmt-name">User Name</p>
+            <p class="cmt-text">this is a commentttttttttttttttttttttttttttttt</p>
+          </div>
+        </div>
+      </div>
+      <div class="line" style="margin: auto; width: 95%;margin-bottom: 20px;"></div>
+      <h2>Related Movie</h2>
+      <div class="suggestion-box">
+
+        <div class="group-film">
+          <div class="film-display col-md-2 mx-3">
+            <a href="film-detail.html"><img src="img/movie-banner/Untitled.png" alt="this is a picture"></a>
+            <a href="film-detail.html"><h5>Film Name</h5></a>
+            <a href="film-detail.html"><i class="fa-regular fa-circle-play"></i></a>
+          </div>
+
+          <div class="film-display col-md-2 mx-3">
+            <a href="film-detail.html"><img src="img/movie-banner/Untitled.png" alt="this is a picture"></a>
+            <a href="film-detail.html"><h5>Film Name</h5></a>
+            <a href="film-detail.html"><i class="fa-regular fa-circle-play"></i></a>
+          </div>
+
+          <div class="film-display col-md-2 mx-3">
+            <a href="film-detail.html"><img src="img/movie-banner/Untitled.png" alt="this is a picture"></a>
+            <a href="film-detail.html"><h5>Film Name</h5></a>
+            <a href="film-detail.html"><i class="fa-regular fa-circle-play"></i></a>
+          </div>
+
+          <div class="film-display col-md-2 mx-3">
+            <a href="film-detail.html"><img src="img/movie-banner/Untitled.png" alt="this is a picture"></a>
+            <a href="film-detail.html"><h5>Film Name</h5></a>
+            <a href="film-detail.html"><i class="fa-regular fa-circle-play"></i></a>
+          </div>
+
+          <div class="film-display col-md-2 mx-3">
+            <a href="film-detail.html"><img src="img/movie-banner/Untitled.png" alt="this is a picture"></a>
+            <a href="film-detail.html"><h5>Film Name</h5></a>
+            <a href="film-detail.html"><i class="fa-regular fa-circle-play"></i></a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<div class="footer">
+
+</div>
+<script src="app.js"></script>
+
+</body>
+
+</html>

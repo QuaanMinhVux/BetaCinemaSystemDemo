@@ -127,7 +127,7 @@ public class UserController {
         double money = Double.parseDouble(request.getParameter("m1"));
         User u = (User)session.getAttribute("login");
         if(money > u.getBalance().doubleValue()){
-            ModelAndView mav = new ModelAndView("/user-premium");
+            ModelAndView mav = new ModelAndView("redirect:/user-premium");
             mav.addObject("flag", "Don't have enough money");
             return mav;
         }else{

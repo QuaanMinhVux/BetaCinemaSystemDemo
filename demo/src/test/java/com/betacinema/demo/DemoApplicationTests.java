@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.sql.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -39,7 +38,6 @@ class DemoApplicationTests {
 		User user = new User();
 		user.setUserName("Vu Truong Huy");
 		user.setBalance(BigDecimal.valueOf(10000.0));
-		user.setDob(Date.valueOf("2005-12-12"));
 		user.setEmail("Huy@gmail.com");
 		user.setVip(false);
 		user.setPassword("121205");
@@ -56,7 +54,6 @@ class DemoApplicationTests {
 		User user = new User();
 		user.setUserName("Vu Truong Huy");
 		user.setBalance(BigDecimal.valueOf(10000.0));
-		user.setDob(Date.valueOf("2005-12-12"));
 		user.setEmail("HuyAAAA@gmail.com");
 		user.setVip(false);
 		user.setPassword("121205");
@@ -66,18 +63,17 @@ class DemoApplicationTests {
 	public void testUpdateVIP(){
 		User u = new User();
 		u = iuser.getUserByEmail("Huy@gmail.com");
-		Assertions.assertTrue(iuser.update(u, true) != null);
+		Assertions.assertTrue(iuser.update(u, BigDecimal.valueOf(10.000)) != null);
 	}
 	@Test
 	public void testUpdateVIPFail(){
 		User user = new User();
 		user.setUserName("Vu Truong Huy");
 		user.setBalance(BigDecimal.valueOf(10000.0));
-		user.setDob(Date.valueOf("2005-12-12"));
 		user.setEmail("HuyAAAA@gmail.com");
 		user.setVip(false);
 		user.setPassword("121205");
-		Assertions.assertTrue(iuser.update(user, false) == null);
+		Assertions.assertTrue(iuser.update(user) == null);
 	}
 	@Test
 	@Order(1)
@@ -85,7 +81,6 @@ class DemoApplicationTests {
 		User user = new User();
 		user.setUserName("Vu Truong Huy");
 		user.setBalance(BigDecimal.valueOf(10000.0));
-		user.setDob(Date.valueOf("2005-12-12"));
 		user.setEmail("quanvmhe160023@fpt.edu.vn");
 		user.setVip(false);
 		user.setPassword("121205");
@@ -130,7 +125,6 @@ class DemoApplicationTests {
 		User user = new User();
 		user.setUserName("Vu Truong Huy");
 		user.setBalance(BigDecimal.valueOf(10000.0));
-		user.setDob(Date.valueOf("2005-12-12"));
 		user.setEmail("Hy@gmail.com");
 		user.setVip(false);
 		user.setPassword("121205");
@@ -144,14 +138,20 @@ class DemoApplicationTests {
 	@Test
 	public void testSendMail(){
 		try {
-			resetPasswordService.sendResetLink("quanvmhe160023@fpt.edu.vn");
+			resetPasswordService.sendResetLink("quanvmhe160023@fpt.edu.vn", new User());
 		}catch (Exception e){
 
 		}
 	}
 	@Test
 	public void testSendMail_NotFound(){
-		Assertions.assertThrows(UserPrincipalNotFoundException.class, ()->resetPasswordService.sendResetLink("h@gmail.com"));
+		User user = new User();
+		user.setUserName("Vu Truong Huy");
+		user.setBalance(BigDecimal.valueOf(10000.0));
+		user.setEmail("h@gmail.com");
+		user.setVip(false);
+		user.setPassword("121205");
+		Assertions.assertThrows(UserPrincipalNotFoundException.class, ()->resetPasswordService.sendResetLink("h@gmail.com", user));
 	}
 	@Test
 	public void testResetPassword(){
@@ -192,7 +192,7 @@ class DemoApplicationTests {
 	}
 	@Test
 	public void testUpdateNotFound(){
-		Assertions.assertThrows(RuntimeException.class, ()->iuser.update(new User(1, "Vu Minh Quan", Date.valueOf("2001-08-02"), BigDecimal.valueOf(0.0), true, "q@gmail.com","quan12345")));
+		Assertions.assertThrows(RuntimeException.class, ()->iuser.update(new User(1, "Vu Minh Quan", BigDecimal.valueOf(0.0), true, "q@gmail.com","quan12345")));
 	}
 	@Test
 	public void testUpdateEmail(){
